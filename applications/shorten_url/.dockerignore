@@ -1,0 +1,25 @@
+# Ignore common development files
+.git
+.vscode
+__pycache__
+*.pyc
+
+# Ignore Flask specific files
+instance/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore Docker specific files
+Dockerfile
+docker-compose.yml
+
+# Ignore other unnecessary files
+*.log
+*.swp
+*.swo
+*.bak
+*.tmp
+*.db
+
+library/
