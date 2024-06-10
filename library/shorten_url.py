@@ -47,8 +47,7 @@ class UrlShortener:
         doc_ref.set({             
              'hash_id': id,
              'short_id': short_id,             
-             'original_url': url,
-             'created_at': time.time()            
+             'original_url': url             
              })
 
 
