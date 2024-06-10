@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, redirect
 from dotenv import load_dotenv
 from library.shorten_url import UrlShortener
 import re
@@ -9,8 +9,16 @@ app = Flask(__name__)
 # Get environment variables
 load_dotenv()
 
+def _shortenUrlBinding():
+    return UrlShortener(
+        hostname=os.getenv('APP_HOSTNAME', 'localhost:5000'),
+        database_config= {
+            'project': os.getenv('GCLOUD_PROJECT_ID'),
+            'database': os.getenv('GCLOUD_FIRESTORE_DATABASE_NAME')
+        }
+    )    
 
-@app.route('/shorten', methods=['POST'])
+@app.route('/', methods=['POST'])
 def shorten():
     url = request.json['url']
     
@@ -20,7 +28,7 @@ def shorten():
             'message': 'Invalid URL'
         }, 400
 
-    url_shortener = UrlShortener(hostname=os.getenv('APP_HOSTNAME', 'localhost:5000'))    
+    url_shortener = _shortenUrlBinding()
 
     return {
         'message': 'URL shortened successfully',
@@ -32,11 +40,11 @@ def shorten():
     }
 
 @app.route('/<short_code>')
-def redirect(short_code):
-    url_shortener = UrlShortener(hostname=os.getenv('APP_HOSTNAME', 'localhost:5000'))
-    original_url = url_shortener.get_original_url(short_code)
+def fetch_original_url(short_code):
+    url_shortener = _shortenUrlBinding()
+    original_url = url_shortener.get_original_url(short_code)    
     if original_url:
-        return redirect(original_url)
+        return redirect(original_url, code=302)
     else:
         return {
             'message': 'Invalid short code'

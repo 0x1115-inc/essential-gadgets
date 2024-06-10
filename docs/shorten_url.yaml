@@ -7,7 +7,7 @@ servers:
   - url: https://apis.0x1115.com/shorten/v1
     description: Production server
 paths:
-  /shorten:
+  /:
     post:
       summary: Shorten a URL
       description: Endpoint to create a shortened URL
@@ -32,6 +32,31 @@ paths:
                 $ref: '#/components/schemas/SuccessResponse'
         '400':
           description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /{shortened_url}:
+    get:
+      summary: Redirect to the original URL
+      description: Endpoint to redirect to the original URL
+      parameters:
+        - in: path
+          name: shortened_url
+          required: true
+          description: The shortened URL
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Found
+          headers:
+            Location:
+              schema:
+                type: string
+                description: The original URL
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
