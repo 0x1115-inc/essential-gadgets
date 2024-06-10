@@ -1,10 +1,12 @@
 import string
 import time
 from google.cloud import firestore
+from google.cloud.firestore_v1.base_query import FieldFilter
 
 class UrlShortener:
-    def __init__(self, hostname) -> None:
+    def __init__(self, hostname, database_config) -> None:
         self.hostname = hostname
+        self.database_config = database_config
     
     def _generate_id(self) -> id:
             """
@@ -36,6 +38,20 @@ class UrlShortener:
         id = self._generate_id()        
         short_id = self._hash_id(id)
 
+        # Store the original URL in Firestore
+        db = firestore.Client(
+            project=self.database_config['project'], 
+            database=self.database_config['database']
+        )
+        doc_ref = db.collection('base62_urls').document(short_id)
+        doc_ref.set({             
+             'hash_id': id,
+             'short_id': short_id,             
+             'original_url': url,
+             'created_at': time.time()            
+             })
+
+
         return f'https://{self.hostname}/{short_id}'
     
     def get_original_url(self, short_code: str) -> str:
@@ -48,16 +64,20 @@ class UrlShortener:
         Returns:
             str: The original URL.
         """
-
-        # TODO: Verify 
         # Initialize Firestore client
-        db = firestore.Client()
+        db = firestore.Client(
+            project=self.database_config['project'], 
+            database=self.database_config['database']
+        )
 
-        # Query the database for the original URL
-        doc_ref = db.collection('short_urls').document(short_code)
-        doc = doc_ref.get()
-        if doc.exists:
-            original_url = doc.to_dict().get('original_url')
-            return original_url
-
-        return None
+        # Query database to get original URL with the first matching short code
+        query = db.collection('base62_urls').where(filter=FieldFilter('short_id', '==', short_code)).limit(1)
+        doc_ref = query.get()
+        
+        # If no matching document is found, return None
+        if len(doc_ref) == 0:
+            return None
+        
+        # Return the original URL
+        return doc_ref[0].get('original_url')
+    
