@@ -10,11 +10,16 @@ app = Flask(__name__)
 load_dotenv()
 
 def _shortenUrlBinding():
+
+    hostname = os.getenv('APP_HOSTNAME', 'localhost:5000')
+    # Replace non readable special characters in string with underscore
+    
     return UrlShortener(
-        hostname=os.getenv('APP_HOSTNAME', 'localhost:5000'),
+        hostname=hostname,
         database_config= {
             'project': os.getenv('GCLOUD_PROJECT_ID'),
-            'database': os.getenv('GCLOUD_FIRESTORE_DATABASE_NAME')
+            'database': os.getenv('GCLOUD_FIRESTORE_DATABASE_NAME'),
+            'collection': f'{re.sub(r"[^a-zA-Z0-9]", "_", hostname)}_urls'
         }
     )    
 

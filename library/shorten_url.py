@@ -43,7 +43,7 @@ class UrlShortener:
             project=self.database_config['project'], 
             database=self.database_config['database']
         )
-        doc_ref = db.collection('base62_urls').document(short_id)
+        doc_ref = db.collection(self.database_config['collection']).document(short_id)
         doc_ref.set({             
              'hash_id': id,
              'short_id': short_id,             
@@ -71,7 +71,7 @@ class UrlShortener:
         )
 
         # Query database to get original URL with the first matching short code
-        query = db.collection('base62_urls').where(filter=FieldFilter('short_id', '==', short_code)).limit(1)
+        query = db.collection(self.database_config['collection']).where(filter=FieldFilter('short_id', '==', short_code)).limit(1)
         doc_ref = query.get()
         
         # If no matching document is found, return None
