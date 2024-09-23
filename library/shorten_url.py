@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import string
 import time
 from google.cloud import firestore
@@ -80,3 +81,21 @@ class UrlShortener:
         # Return the original URL
         return doc_ref[0].get('original_url')
     
+    def store_visitor_information(self, short_code, visitor_info):
+        """
+        Stores visitor information for the given short code.
+
+        Args:
+            short_code (str): The short code for the URL.
+            visitor_info (dict): Information about the visitor.
+        """
+        db = firestore.Client(
+            project=self.database_config['project'], 
+            database=self.database_config['database']
+        )
+        doc_ref = db.collection(self.database_config['collection']).document(short_code)
+        doc_ref.update({
+            'visitors': firestore.ArrayUnion([visitor_info])
+        })
+
+        

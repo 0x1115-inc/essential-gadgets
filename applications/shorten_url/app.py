@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from library.shorten_url import UrlShortener
 import re
 import os
+import time
 
 app = Flask(__name__)
 
@@ -47,8 +48,14 @@ def shorten():
 @app.route('/<short_code>')
 def fetch_original_url(short_code):
     url_shortener = _shortenUrlBinding()
-    original_url = url_shortener.get_original_url(short_code)    
+    original_url = url_shortener.get_original_url(short_code)
+    
     if original_url:
+        url_shortener.store_visitor_information(short_code, {            
+            'timestamp': time.time(),
+            'time': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime()),
+            'headers': dict(request.headers.items()),            
+        })
         return redirect(original_url, code=302)
     else:
         return {
