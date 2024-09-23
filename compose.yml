@@ -1,0 +1,22 @@
+services:
+  mongodb:
+    image: bitnami/mongodb:latest
+    container_name: mongodb
+    ports:
+      - "127.0.0.1:27017:27017"
+    networks:
+      - app-network
+
+  shorten-url:
+    image: 0x1115/shorten-url:latest
+    container_name: shorten-url
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

@@ -3,8 +3,22 @@ import string
 import time
 from google.cloud import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter
+from pymongo import MongoClient
 
-class UrlShortener:
+class UrlShortener(ABC):
+    @abstractmethod
+    def shorten(self, url: str) -> str:
+        pass
+
+    @abstractmethod
+    def get_original_url(self, short_code: str) -> str:
+        pass
+
+    @abstractmethod
+    def store_visitor_information(self, short_code: str, visitor_info: dict):
+        pass
+
+class UrlShortenerFirestore(UrlShortener):
     def __init__(self, hostname, database_config) -> None:
         self.hostname = hostname
         self.database_config = database_config
@@ -98,4 +112,57 @@ class UrlShortener:
             'visitors': firestore.ArrayUnion([visitor_info])
         })
 
+        
+class UrlShortenerMongoDB(UrlShortener):
+    def __init__(self, hostname, database_config) -> None:
+        self.hostname = hostname
+        self.database_config = database_config
+        self.client = MongoClient(self.database_config['uri'])
+        self.db = self.client[self.database_config['database']]
+        self.collection = self.db[self.database_config['collection']]
+    
+    def _generate_id(self) -> int:
+        return time.time_ns()
+    
+    def _hash_id(self, id: int) -> str:
+        map = string.ascii_letters + string.digits
+        short_id = ""        
+        while id > 0:
+            id, rem = divmod(id, 62)
+            short_id += map[rem]
+        return short_id
+    
+    def shorten(self, url: str) -> str:
+        id = self._generate_id()
+        short_id = self._hash_id(id)
+        
+        self.collection.insert_one({
+            'hash_id': id,
+            'short_id': short_id,
+            'original_url': url
+        })
+        
+        return f'https://{self.hostname}/{short_id}'
+    
+    def get_original_url(self, short_code: str) -> str:
+        result = self.collection.find_one({'short_id': short_code})
+        if result:
+            return result['original_url']
+        return None
+    
+    def store_visitor_information(self, short_code, visitor_info):
+        self.collection.update_one(
+            {'short_id': short_code},
+            {'$push': {'visitors': visitor_info}}
+        )
+
+class UrlShortenerFactory:
+    @staticmethod
+    def create_url_shortener(db_type: str, hostname: str, database_config: dict) -> UrlShortener:
+        if db_type == 'firestore':
+            return UrlShortenerFirestore(hostname, database_config)
+        elif db_type == 'mongodb':
+            return UrlShortenerMongoDB(hostname, database_config)
+        else:
+            raise ValueError(f"Unsupported database type: {db_type}")
         
