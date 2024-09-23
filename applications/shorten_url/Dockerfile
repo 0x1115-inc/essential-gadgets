@@ -15,8 +15,7 @@ RUN pip install gunicorn
 COPY . .
 
 # Expose the port on which the Flask application will run
-ENV PORT=8080
-EXPOSE $PORT
+EXPOSE 8080
 
 # Set the entrypoint command to run the Flask application
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
+CMD ["gunicorn", "--bind", ":8080", "--workers", "1", "--threads", "8", "--timeout", "0", "app:app"]

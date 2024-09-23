@@ -22,3 +22,5 @@ docker-compose.yml
 *.bak
 *.tmp
 *.db
+
+.gcloud
