@@ -10,6 +10,12 @@ services:
   shorten-url:
     image: 0x1115/shorten-url:latest
     container_name: shorten-url
+    environment:
+      - APP_HOSTNAME=localhost:8080
+      - DB_PROVIDER=mongodb
+      - DB_MONGODB_URI=mongodb://mongodb/shorten?retryWrites=true&w=majority
+      - DB_MONGODB_DATABASE_NAME=shorten-url
+
     ports:
       - "127.0.0.1:8080:8080"
     depends_on:
