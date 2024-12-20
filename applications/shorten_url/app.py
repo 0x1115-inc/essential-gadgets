@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect
 from dotenv import load_dotenv
-from library.shorten_url import UrlShortener
+from library.shorten_url import UrlShortenerFactory
 import re
 import os
 import time
@@ -11,18 +11,28 @@ app = Flask(__name__)
 load_dotenv()
 
 def _shortenUrlBinding():
-
     hostname = os.getenv('APP_HOSTNAME', 'localhost:5000')
     # Replace non readable special characters in string with underscore
     
-    return UrlShortener(
-        hostname=hostname,
-        database_config= {
+    config = {
+        'database_provider': os.getenv('DATABASE_PROVIDER', 'firestore'),
+        'mongodb': {
+            'uri': os.getenv('MONGODB_URI'),
+            'database': os.getenv('MONGODB_DATABASE_NAME'),
+            'collection': f'{re.sub(r"[^a-zA-Z0-9]", "_", hostname)}_urls'
+        },
+        'firestore': {
             'project': os.getenv('GCLOUD_PROJECT_ID'),
             'database': os.getenv('GCLOUD_FIRESTORE_DATABASE_NAME'),
             'collection': f'{re.sub(r"[^a-zA-Z0-9]", "_", hostname)}_urls'
         }
-    )    
+    }
+
+    provider = config.get('database_provider')
+    if provider not in config.keys() or provider == 'database_provider':
+        raise ValueError(f'Invalid database provider {provider}')
+
+    return UrlShortenerFactory.create_url_shortener(provider, hostname, config[provider])    
 
 @app.route('/', methods=['POST'])
 def shorten():
