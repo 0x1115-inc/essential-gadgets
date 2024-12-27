@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { ClipboardIcon } from "@heroicons/react/24/outline";
 import { ToastContainer, toast } from "react-toastify";
 
+const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+
 const InputForm = () => {
   const [originalLink, setOriginalLink] = useState("");
   const [shortenedLink, setShortenedLink] = useState("");
@@ -27,8 +29,9 @@ const InputForm = () => {
     setLoading(true);
     setError("");
 
+    console.log(apiUrl);
     try {
-      const response = await fetch("/api", {
+      const response = await fetch(`${apiUrl}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
