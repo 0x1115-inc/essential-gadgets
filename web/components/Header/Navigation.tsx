@@ -1,24 +1,27 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-const navigation = [{ name: "Home", href: "/", current: true }];
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
+const navigation = [
+  { name: "Home", href: "/" },
+  { name: "Links Management", href: "/links/" },
+];
 
 const Navigation = () => {
+  const pathname = usePathname();
+
   return (
     <nav className="ml-6 flex space-x-4">
       {navigation.map((item) => (
         <Link
           key={item.name}
           href={item.href}
-          className={classNames(
-            item.current
-              ? "bg-blue-500 text-white"
-              : "text-gray-300 hover:bg-gray-700 hover:text-white",
-            "rounded-md px-3 py-2 text-sm font-medium"
-          )}
+          className={`rounded-md px-3 py-2 text-sm font-medium ${
+            pathname === item.href
+              ? "bg-blue-400 text-white"
+              : "text-gray-600 hover:bg-blue-400 hover:text-white"
+          }`}
         >
           {item.name}
         </Link>

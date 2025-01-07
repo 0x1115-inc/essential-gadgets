@@ -13,7 +13,7 @@ const Header = () => {
           {/* Logo and Navigation */}
           <div className="flex items-center">
             <Logo />
-            {/* <Navigation /> */}
+            <Navigation />
           </div>
 
           {/* Notifications and Profile */}
