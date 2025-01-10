@@ -1,6 +1,14 @@
 # Essential Gadgets
+The Essential Gadgets is a collection of useful tools and services that can be used to simplify the daily tasks.
 
 ## Development guidelines
+### Project structure
+`/applications/{app-name}`: The directory contains the source code of the application. Each application should be an instance of [Flask](http://flask.palletsprojects.com/en/stable/tutorial/layout/) and placed in a separate directory.  
+`/docs`: The directory contains the documentation of the project.  
+`/library`: The directory contains the shared libraries. In some cases, the shared libraries can be used by multiple applications.  
+`/web`: The directory contains the web interface source code of the project. It can be known as the frontend of the project.
+
+## Deployment
 
 ### Build the Docker
 ```bash
@@ -12,7 +20,6 @@ cd applications/shorten_url
 docker build -t 0x1115/shorten-url:latest -t 0x1115/shorten-url:[version-tag] .
 ```
 
-## Deployment
 ### Deploy to the Google Cloud Run
 ```bash
 # Deploy the application

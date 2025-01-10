@@ -1,11 +1,13 @@
 from flask import Flask, request, redirect
 from dotenv import load_dotenv
 from library.shorten_url import UrlShortenerFactory
+from flask_cors import CORS
 import re
 import os
 import time
 
 app = Flask(__name__)
+CORS(app)
 
 # Get environment variables
 load_dotenv()
@@ -22,8 +24,8 @@ def _shortenUrlBinding():
             'collection': f'{re.sub(r"[^a-zA-Z0-9]", "_", hostname)}_urls'
         },
         'firestore': {
-            'project': os.getenv('GCLOUD_PROJECT_ID'),
-            'database': os.getenv('GCLOUD_FIRESTORE_DATABASE_NAME'),
+            'project': os.getenv('DB_FIRESTORE_PROJECT_ID'),
+            'database': os.getenv('DB_FIRESTORE_DATABASE_NAME'),
             'collection': f'{re.sub(r"[^a-zA-Z0-9]", "_", hostname)}_urls'
         }
     }
