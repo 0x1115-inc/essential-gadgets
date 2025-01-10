@@ -6,7 +6,8 @@ The Essential Gadgets is a collection of useful tools and services that can be u
 `/applications/{app-name}`: The directory contains the source code of the application. Each application should be an instance of [Flask](http://flask.palletsprojects.com/en/stable/tutorial/layout/) and placed in a separate directory.  
 `/docs`: The directory contains the documentation of the project.  
 `/library`: The directory contains the shared libraries. In some cases, the shared libraries can be used by multiple applications.  
-`/web`: The directory contains the web interface source code of the project. It can be known as the frontend of the project.
+`/web`: The directory contains the web interface source code of the project. It can be known as the frontend of the project.  
+`/websites`: The directory of public deployment website. Commonly, the built code from `/web` will be copied to each nest folders in this directory. Each folder is a separate website and have different git repository.  
 
 ## Deployment
 
