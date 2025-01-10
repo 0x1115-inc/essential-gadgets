@@ -30,4 +30,6 @@ instance/
 # Miscellaneous
 .DS_Store
 .gcloud
-website
+
+websites/*
+!websites/.gitkeep
