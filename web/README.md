@@ -18,3 +18,8 @@ NEXT_PUBLIC_FIREBASE_APP_ID=<your-firebase-app-id>
 # From the left navigation, select Authentication -> Sign-in Method -> Add new provider -> Google
 # From the left navigation, select Setting icon -> Project setting -> Add app -> Web app -> You will see your Firebase configuration: apiKey, authDomain, projectId, storageBucket, messagingSenderId, measurementId. 
 # Add the project credentials to .env.local as shown above.
+
+## Add Authorised domains on firebase
+# Go to your Firebase Console.
+# Select a project.
+# From the left navigation, select Authentication -> Settings -> Authorised domains -> Add your domain.
