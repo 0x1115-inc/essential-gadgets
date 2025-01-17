@@ -9,6 +9,9 @@ WORKDIR /app
 COPY /internal internal
 COPY /build/egb/requirements.txt .
 
+# Upgrade pip
+RUN pip install --upgrade pip
+
 # Install the project dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
