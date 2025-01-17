@@ -1,0 +1,36 @@
+services:
+  # Local database for development
+  mongodb:
+    image: bitnami/mongodb:latest    
+    ports:
+      - "127.0.0.1:27017:27017"
+    networks:
+      - app-network
+
+  app_shorten-url:
+    build:
+      context: .
+      dockerfile: build/egb/Dockerfile
+    volumes:
+      - ./applications/shorten_url:/app/shorten_url
+      - ./internal:/app/internal    
+    environment:
+      - APP_HOSTNAME=localhost:8080
+      - DATABASE_PROVIDER=mongodb
+      - MONGODB_URI=mongodb://mongodb/shorten?retryWrites=true&w=majority
+      - MONGODB_DATABASE_NAME=shorten-url
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - FLASK_
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    command: ["/bin/sh", "/app/shorten_url/entrypoint.sh"]
+
+
+networks:
+  app-network:
+    driver: bridge
