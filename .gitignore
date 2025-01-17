@@ -33,3 +33,5 @@ instance/
 
 websites/*
 !websites/.gitkeep
+
+*.code-workspace
