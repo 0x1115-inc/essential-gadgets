@@ -5,7 +5,10 @@ FROM 0x1115/egb:latest
 WORKDIR /app
 
 # Copy the requirements file to the container
-COPY requirements.txt .
+COPY /applications/shorten_url/requirements.txt .
+
+# Upgrade pip
+RUN pip install --upgrade pip
 
 # Install the required dependencies
 RUN pip install --no-cache-dir -r requirements.txt
