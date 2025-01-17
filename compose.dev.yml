@@ -7,6 +7,22 @@ services:
     networks:
       - app-network
 
+  # Web Application
+  web: 
+    image: node:alpine
+    volumes:
+      - ./web:/app/web
+      - ./scripts/frontend-web:/app/scripts
+    env_file:
+      - ./web/.env
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - app-network
+    command: ["/bin/sh", "/app/scripts/1_serve-local-frontend-development.sh"]
+    
+
+  # Backend Applications
   app_shorten-url:
     build:
       context: .
@@ -30,6 +46,7 @@ services:
       - app-network
     command: ["/bin/sh", "/app/shorten_url/entrypoint.sh"]
 
+  
 
 networks:
   app-network:
