@@ -2,9 +2,9 @@
 
 # -----------------------------------------------------------------------------
 #  Project: Essential Gadgets
-#  Script: 2_web_build.sh
 #  Author: Thanh Dancer <congthanh@0x1115.com>
 #  Created Date: 10/01/2025
+#  Updated Date: 17/01/2025
 #  Description: This script builds the project for production.
 # -----------------------------------------------------------------------------
 
