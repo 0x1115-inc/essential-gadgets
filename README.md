@@ -33,3 +33,8 @@ gcloud run deploy shorten-url \
 --no-cpu-boost \
 --set-env-vars=APP_HOSTNAME=$APP_HOSTNAME,DB_PROVIDER=$DB_PROVIDER,DB_FIRESTORE_PROJECT_ID=$DB_FIRESTORE_PROJECT_ID,DB_FIRESTORE_DATABASE_NAME=$DB_FIRESTORE_DATABASE_NAME \
 ```
+
+### Deploy GUI website 
+1. Follow the [Firebase Setup](web/README.md#Firebase-Setup) to create Firebase App
+2. Create a folder same as the hostname that you want to serve the website in `/websites` folder. For example, you decide use `shorten.example.com`, you should create folder `websites/shorten.example.com`. 
+3. Run command `bash scripts/2_web_build.sh`. The built assets will copy to all folder in `/websites` automatically. It is ready to deploy to any host that serve the static frontend (Github Page, Cloudflare Page).
