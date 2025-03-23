@@ -1,3 +1,4 @@
+# Essential Gadget Bootstrap
 # Use an official Python runtime as the base image
 FROM python:3.9-alpine
 
@@ -5,8 +6,11 @@ FROM python:3.9-alpine
 WORKDIR /app
 
 # Copy the requirements file into the container
-COPY /library library
-COPY requirements.txt .
+COPY /internal internal
+COPY /build/egb/requirements.txt .
+
+# Upgrade pip
+RUN pip install --upgrade pip
 
 # Install the project dependencies
 RUN pip install --no-cache-dir -r requirements.txt

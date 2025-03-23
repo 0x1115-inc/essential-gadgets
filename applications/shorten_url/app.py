@@ -1,6 +1,6 @@
 from flask import Flask, request, redirect
 from dotenv import load_dotenv
-from library.shorten_url import UrlShortenerFactory
+from internal.shorten_url import UrlShortenerFactory
 from flask_cors import CORS
 import re
 import os

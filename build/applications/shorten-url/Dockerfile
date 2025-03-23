@@ -5,17 +5,20 @@ FROM 0x1115/egb:latest
 WORKDIR /app
 
 # Copy the requirements file to the container
-COPY requirements.txt .
+COPY /applications/shorten_url/requirements.txt .
+
+# Upgrade pip
+RUN pip install --upgrade pip
 
 # Install the required dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install gunicorn
 
 # Copy the application code to the container
-COPY . .
+COPY /applications/shorten_url /app/shorten_url
 
 # Expose the port on which the Flask application will run
 EXPOSE 8080
 
 # Set the entrypoint command to run the Flask application
-CMD ["gunicorn", "--bind", ":8080", "--workers", "1", "--threads", "8", "--timeout", "0", "app:app"]
+CMD ["gunicorn", "--bind", ":8080", "--workers", "1", "--threads", "8", "--timeout", "0", "shorten_url.app:app"]
