@@ -25,7 +25,7 @@ pyasn1==0.6.0
 pyasn1_modules==0.4.0
 pymongo==4.9.1
 python-dotenv==1.0.1
-requests==2.32.3
+requests==2.32.4
 rsa==4.9
 urllib3==2.5.0
 Werkzeug==3.0.6
