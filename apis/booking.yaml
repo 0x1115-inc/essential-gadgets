@@ -1,0 +1,382 @@
+#  Copyright 0x1115 Inc <info@0x1115.com>
+# 
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+# 
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+
+openapi: 3.1.0
+info:
+  title: Gadget Link Booking API
+  version: 1.0.0
+  summary: Staff booking management API
+  description: |
+    Booking API specification for the Gadget Link Booking Service.
+    This document intentionally includes booking endpoints only.
+
+servers:
+  - url: https://apis.0x1115.com/prd-04/v1
+    description: Production
+  - url: http://localhost:8080
+    description: Local development
+
+tags:
+  - name: Bookings
+
+paths:
+  /api/v1/bookings:
+    get:
+      tags: [Bookings]
+      summary: List bookings
+      operationId: listBookings
+      security:
+        - StaffSessionAuth: []
+      parameters:
+        - name: slug
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Slug'
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [scheduled, canceled]
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: page_size
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 20
+      responses:
+        '200':
+          description: Booking list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingListResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      tags: [Bookings]
+      summary: Create booking
+      operationId: createBooking
+      security:
+        - StaffSessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingRequest'
+      responses:
+        '201':
+          description: Booking created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Overlapping booking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/bookings/{booking_id}:
+    get:
+      tags: [Bookings]
+      summary: Get booking by ID
+      operationId: getBookingById
+      security:
+        - StaffSessionAuth: []
+      parameters:
+        - $ref: '#/components/parameters/BookingIdParam'
+      responses:
+        '200':
+          description: Booking details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    patch:
+      tags: [Bookings]
+      summary: Update booking
+      operationId: updateBooking
+      security:
+        - StaffSessionAuth: []
+      parameters:
+        - $ref: '#/components/parameters/BookingIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookingRequest'
+      responses:
+        '200':
+          description: Booking updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Overlapping booking
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/bookings/{booking_id}/cancel:
+    post:
+      tags: [Bookings]
+      summary: Cancel booking
+      operationId: cancelBooking
+      security:
+        - StaffSessionAuth: []
+      parameters:
+        - $ref: '#/components/parameters/BookingIdParam'
+      responses:
+        '200':
+          description: Booking canceled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    StaffSessionAuth:
+      type: apiKey
+      in: cookie
+      name: session_id
+
+  parameters:
+    BookingIdParam:
+      name: booking_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    Slug:
+      type: string
+      pattern: '^[a-z0-9-]{3,64}$'
+      example: team-townhall
+
+    BookingStatus:
+      type: string
+      enum: [scheduled, canceled]
+
+    Booking:
+      type: object
+      required:
+        - id
+        - slug
+        - target_url
+        - starts_at_utc
+        - ends_at_utc
+        - status
+        - created_by
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        slug:
+          $ref: '#/components/schemas/Slug'
+        target_url:
+          type: string
+          format: uri
+        starts_at_utc:
+          type: string
+          format: date-time
+        ends_at_utc:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/BookingStatus'
+        created_by:
+          type: string
+          format: email
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateBookingRequest:
+      type: object
+      required:
+        - slug
+        - target_url
+        - starts_at_utc
+        - ends_at_utc
+      properties:
+        slug:
+          $ref: '#/components/schemas/Slug'
+        target_url:
+          type: string
+          format: uri
+        starts_at_utc:
+          type: string
+          format: date-time
+        ends_at_utc:
+          type: string
+          format: date-time
+      description: Time window semantics are [starts_at_utc, ends_at_utc).
+
+    UpdateBookingRequest:
+      type: object
+      properties:
+        target_url:
+          type: string
+          format: uri
+        starts_at_utc:
+          type: string
+          format: date-time
+        ends_at_utc:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/BookingStatus'
+
+    BookingResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: '#/components/schemas/Booking'
+
+    BookingListResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Booking'
+        meta:
+          type: object
+          required: [page, page_size]
+          properties:
+            page:
+              type: integer
+            page_size:
+              type: integer
+            total:
+              type: integer
+
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              example: BOOKING_OVERLAP
+            message:
+              type: string
+              example: Booking overlaps with an existing time window.
+            details:
+              type: object
+              additionalProperties: true
+            request_id:
+              type: string

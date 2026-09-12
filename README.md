@@ -1,11 +1,12 @@
-# Essential Gadgets
-The Essential Gadgets is a collection of useful tools and services that can be used to simplify the daily tasks.
+# PRD-04: Link Routing Service
+The Link Routing Service is a component of the Essential Gadgets that handles the routing of public links to their appropriate targets based on bookings and default configurations.
 
 ## Development guidelines
 ### Project layout
-This project is following and extend the [Standard Go Project Layout](https://github.com/golang-standards/project-layout).
+This project is following and extend the [0x1115 Inc Service Repository Template](https://github.com/0x1115-inc/service-repository-template).
 
-`/api`: OpenAPI/Swagger specs, JSON schema files, protocol definition files.  
+
+`/apis`: OpenAPI/Swagger specs, JSON schema files, protocol definition files.  
 `/applications/{app-name}`: The directory contains the source code of the application. Each application should be an instance of [Flask](http://flask.palletsprojects.com/en/stable/tutorial/layout/) and placed in a separate directory.  
 `/build`: The directory contains the build scripts and configuration files.  
 `/docs`: The directory contains the documentation of the project.  
