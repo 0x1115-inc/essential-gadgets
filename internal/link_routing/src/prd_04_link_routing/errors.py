@@ -11,3 +11,13 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+
+class DomainValidationError(ValueError):
+    """Exception raised for errors in the domain validation."""
+    def __init__(self, message: str):
+        super().__init__(message)
+
+class BookingOverlapError(DomainValidationError):
+    """Exception raised for errors when a booking overlaps with an existing booking."""
+    def __init__(self, message: str):
+        super().__init__(message)
