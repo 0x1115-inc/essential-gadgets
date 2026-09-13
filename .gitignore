@@ -5,6 +5,8 @@ venv/
 *.pyo
 *.pyd
 
+*.egg-info/
+
 # Flask
 instance/
 .webassets-cache
