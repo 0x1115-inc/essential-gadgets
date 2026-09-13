@@ -70,9 +70,15 @@ flowchart LR
     Visitor[Public visitor] --> Redirect[Public redirect endpoint]
     User[Authenticated user] --> Management[Booking management API]
 
-    Management --> Identity[Identity service]
+    
     Redirect --> Resolution[Link resolution service]
     Management --> Booking[Booking management service]
+    Management --> Identity[Identity service]
+
+    subgraph prd-04
+        Resolution
+        Booking
+    end
 
     Resolution --> Data[Source-link and booking data]
     Booking --> Data
