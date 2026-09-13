@@ -15,7 +15,10 @@
 from datetime import datetime, UTC
 from collections.abc import Iterable
 
-from prd_04_link_routing.errors import DomainValidationError
+from prd_04_link_routing.errors import (
+    DomainValidationError,
+    BookingOverlapError,
+)
 from prd_04_link_routing.models import Booking, BookingStatus
 
 def require_utc(value: datetime, field_name: str) -> datetime:
@@ -81,4 +84,4 @@ def ensure_no_scheduled_booking_overlap(
                 existing.ends_at
             )
         ):
-            raise DomainValidationError("Candidate booking overlaps with an existing scheduled booking.")
+            raise BookingOverlapError("Candidate booking overlaps with an existing scheduled booking.")
