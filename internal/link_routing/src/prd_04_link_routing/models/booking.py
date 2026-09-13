@@ -12,24 +12,23 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+from dataclasses import dataclass
+from uuid import UUID
+from datetime import datetime
+from enum import StrEnum
 
-[project]
-name = "prd-04-link-routing"
-version = "2.0.0"
-description = "Link routing service for managing source links and their associated bookings."
-requires-python = ">=3.11"
-dependencies = []
+class BookingStatus(StrEnum):
+    SCHEDULED = "scheduled"
+    CANCELED = "canceled"
 
-[project.optional-dependencies]
-dev = [
-    "pytest"
-]
-
-[tool.setuptools.packages.find]
-where = ["src"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
+@dataclass(frozen=True, slots=True)
+class Booking:
+    id: UUID
+    source_link_id: UUID
+    target_url: str
+    starts_at: datetime
+    ends_at: datetime
+    status: BookingStatus
+    created_by_user_id: str
+    created_at: datetime
+    updated_at: datetime
