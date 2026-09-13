@@ -20,7 +20,7 @@ from pymongo import MongoClient
 from pymongo.collection import Collection
 
 from persistence.mongo_source_link_repository import MongoSourceLinkRepository
-
+from persistence.mongo_booking_repository import MongoBookingRepository 
 
 @pytest.fixture
 def source_link_repository() -> Iterator[MongoSourceLinkRepository]:
@@ -35,6 +35,26 @@ def source_link_repository() -> Iterator[MongoSourceLinkRepository]:
     collection.drop()
 
     repository = MongoSourceLinkRepository(collection)
+    repository.ensure_indexes()
+
+    yield repository
+
+    collection.drop()
+    client.close()
+
+@pytest.fixture
+def booking_repository() -> Iterator[MongoBookingRepository]:
+    mongodb_uri = os.getenv(
+        "TEST_MONGODB_URI",
+        "mongodb://localhost:27017",
+    )
+    client = MongoClient(mongodb_uri, tz_aware=True)
+    database = client["prd_04_link_routing_test"]
+    collection: Collection = database["bookings"]
+
+    collection.drop()
+
+    repository = MongoBookingRepository(database, collection)
     repository.ensure_indexes()
 
     yield repository
