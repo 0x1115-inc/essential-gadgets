@@ -21,3 +21,13 @@ class BookingOverlapError(DomainValidationError):
     """Exception raised for errors when a booking overlaps with an existing booking."""
     def __init__(self, message: str):
         super().__init__(message)
+
+class SourceLinkPathConflictError(DomainValidationError):
+    """Exception raised for errors when a source link path is already assigned."""
+    def __init__(self, message: str):
+        super().__init__(message)
+
+class ConcurrentUpdateError(DomainValidationError):
+    """Raised when a resource changed before an update could be applied."""
+    def __init__(self, message: str):
+        super().__init__(message)
