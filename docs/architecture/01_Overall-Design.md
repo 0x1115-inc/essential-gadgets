@@ -4,7 +4,7 @@ Document Title: Overall Architecture Design Version 2
 Author: Duog Lee <duoglee@0x1115.com>
 Issue Date: 2026-09-12
 Update Date: 2026-09-12
-Document Version: 1.0.0
+Document Version: 1.0.1
 ---
 
 # Overall Architecture Design Version 2
@@ -146,6 +146,14 @@ An unknown public link has no configured default target and returns a not-found 
 - Add time-based destination selection.
 - Fall back to the default target when no booking applies.
 - Support one initial bookable source link while retaining a model that supports many.
+- Source links have one nullable owner. Owners can transfer ownership.
+- Source links are never deleted. When unowned, they are hidden form user management but remain publicly routable according to their status and configured default target.
+- Owners manage source links and all bookings associated with them. "Manager" means the source link owner in v2.0.
+- Bookings can be edited at any lifecycle stage, including an active window. Changes take effect on subsequent redirect requests after overlap validation.
+- Source-link creation is unlimited in v2.0, while the service isolates quota checks behind a future policy mechanism.
+- Booking time values are stored and exchanged as UTC. The browswer display and accepts user-local times, converting them to UTC at the API boundary.
+- Source links use a globally unique, user-defined `path`, not only a generated slug.
+- The source path use the allowed character set `[a-z0-9\-_\/]`, with normalization/edge-case rules documented separately.
 
 ### 8.2. Version 2.1: Operational Capabilities
 - Add tracking link capabilities such as counting clicks, recording referrers, and tracking user interactions.
@@ -164,4 +172,5 @@ An unknown public link has no configured default target and returns a not-found 
 ## 10. Document Control
 | Document Version | Date | Author | Description |
 |------------------|------|--------|-------------|
-| 1.0     | 2026-09-12 | Duog Lee <duog.lee@0x1115.com> | Initialize document with overall design and architecture details. |
+| 1.0.1     | 2026-09-12 | Duog Lee <duog.lee@0x1115.com> | Initialize document with overall design and architecture details. |
+| 1.0.1   | 2026-09-13 | Duog Lee <duog.lee@0x1115.com> | Update document version to reflect minor edits and clarifications. |
