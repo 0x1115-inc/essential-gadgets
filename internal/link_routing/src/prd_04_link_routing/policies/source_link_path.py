@@ -16,6 +16,7 @@ import re
 
 from prd_04_link_routing.errors import DomainValidationError
 
+
 _SOURCE_LINK_PATH_PATTERN = re.compile(
     r"^(?!.*//)[a-z0-9](?:[a-z0-9_/-]*[a-z0-9_-])?$"
 )

@@ -41,7 +41,7 @@ def is_booking_active(booking: Booking, at_utc: datetime) -> bool:
     require_utc(at_utc, "at_utc")
     return (
         booking.status is BookingStatus.SCHEDULED
-        and booking.starts_at_utc <= at_utc < booking.ends_at_utc
+        and booking.starts_at <= at_utc < booking.ends_at
     )
 
 def booking_windows_overlap(
@@ -62,7 +62,7 @@ def ensure_no_scheduled_booking_overlap(
         candidate: Booking,
         existing_bookings: Iterable[Booking]
 ) -> None:
-    validate_booking_window(candidate.starts_at_utc, candidate.ends_at_utc)
+    validate_booking_window(candidate.starts_at, candidate.ends_at)
 
     if candidate.status is BookingStatus.CANCELED:
         return
@@ -75,10 +75,10 @@ def ensure_no_scheduled_booking_overlap(
             existing.source_link_id == candidate.source_link_id
             and existing.status is BookingStatus.SCHEDULED
             and booking_windows_overlap(
-                candidate.starts_at_utc,
-                candidate.ends_at_utc,
-                existing.starts_at_utc,
-                existing.ends_at_utc
+                candidate.starts_at,
+                candidate.ends_at,
+                existing.starts_at,
+                existing.ends_at
             )
         ):
             raise DomainValidationError("Candidate booking overlaps with an existing scheduled booking.")
