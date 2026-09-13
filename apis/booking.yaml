@@ -23,7 +23,7 @@ info:
     This document intentionally includes booking endpoints only.
 
 servers:
-  - url: https://apis.0x1115.com/prd-04/v1
+  - url: https://apis.0x1115.com/prd-04/v2
     description: Production
   - url: http://localhost:8080
     description: Local development
@@ -32,7 +32,7 @@ tags:
   - name: Bookings
 
 paths:
-  /api/v1/bookings:
+  /api/v2/bookings:
     get:
       tags: [Bookings]
       summary: List bookings
@@ -130,7 +130,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/v1/bookings/{booking_id}:
+  /api/v2/bookings/{booking_id}:
     get:
       tags: [Bookings]
       summary: Get booking by ID
@@ -205,7 +205,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/v1/bookings/{booking_id}/cancel:
+  /api/v2/bookings/{booking_id}/cancel:
     post:
       tags: [Bookings]
       summary: Cancel booking
