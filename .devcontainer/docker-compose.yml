@@ -1,0 +1,33 @@
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/python:3-3.14-trixie
+    volumes:
+      - ..:/workspaces:cached
+    # Keep the container running so VS Code can attach to it.
+    command: sleep infinity
+    environment:
+      - TEST_MONGODB_URI=mongodb://mongodb:27017
+      - MONGODB_URI=mongodb://mongodb:27017
+    networks:
+      - app-network
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: bitnami/mongodb:latest
+    restart: unless-stopped
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongodb-data:/bitnami/mongodb
+    networks:
+      - app-network
+
+volumes:
+  mongodb-data:
+
+networks:
+  app-network:
+    driver: bridge
