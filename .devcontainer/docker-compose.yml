@@ -6,8 +6,8 @@ services:
     # Keep the container running so VS Code can attach to it.
     command: sleep infinity
     environment:
-      - TEST_MONGODB_URI=mongodb://mongodb:27017
-      - MONGODB_URI=mongodb://mongodb:27017
+      - TEST_MONGODB_URI=mongodb://root:localDevelopmentRootPassword@mongodb:27017/?replicaSet=rs0&authSource=admin
+      - MONGODB_URI=mongodb://root:localDevelopmentRootPassword@mongodb:27017/?replicaSet=rs0&authSource=admin
     networks:
       - app-network
     depends_on:
@@ -17,16 +17,20 @@ services:
     image: bitnami/mongodb:latest
     restart: unless-stopped
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-    ports:
-      - "127.0.0.1:27017:27017"
+      - ALLOW_EMPTY_PASSWORD=no
+      - MONGODB_ROOT_USER=root
+      - MONGODB_ROOT_PASSWORD=localDevelopmentRootPassword
+      - MONGODB_REPLICA_SET_MODE=primary
+      - MONGODB_REPLICA_SET_NAME=rs0
+      - MONGODB_REPLICA_SET_KEY=localDevelopmentKey
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb  
     volumes:
-      - mongodb-data:/bitnami/mongodb
+      - mongodb-data-rs0:/bitnami/mongodb
     networks:
       - app-network
 
 volumes:
-  mongodb-data:
+  mongodb-data-rs0:
 
 networks:
   app-network:
