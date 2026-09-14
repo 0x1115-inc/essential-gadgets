@@ -15,6 +15,8 @@
 from collections.abc import Sequence
 from typing import Protocol
 
+from uuid import UUID
+
 from prd_04_link_routing.models import SourceLink
 
 class SourceLinkRepository(Protocol):
@@ -28,10 +30,10 @@ class SourceLinkRepository(Protocol):
         
         """
 
-    def get_by_id(self, source_link_id: str) -> SourceLink | None:
+    def get_by_id(self, source_link_id: UUID) -> SourceLink | None:
         """Retrieve a source link by its ID.
         Args:
-            source_link_id (str): The ID of the source link to retrieve.
+            source_link_id (UUID): The ID of the source link to retrieve.
 
         Returns:
             SourceLink | None: The source link with the specified ID, or None if not found.
