@@ -6,14 +6,16 @@ The Link Routing Service is a component of the Essential Gadgets that handles th
 This project is following and extend the [0x1115 Inc Service Repository Template](https://github.com/0x1115-inc/service-repository-template).
 
 
-`/apis`: OpenAPI/Swagger specs, JSON schema files, protocol definition files.  
-`/applications/{app-name}`: The directory contains the source code of the application. Each application should be an instance of [Flask](http://flask.palletsprojects.com/en/stable/tutorial/layout/) and placed in a separate directory.  
-`/build`: The directory contains the build scripts and configuration files.  
-`/docs`: The directory contains the documentation of the project.  
-`/internal`: The directory contains the shared libraries. In some cases, the shared libraries can be used by multiple applications.  
-`/scripts`: The directory contains the scripts to perform various tasks.  
-`/web`: The directory contains the web interface source code of the project. It can be known as the frontend of the project.  
-`/websites`: The directory of public deployment website. Commonly, the built code from `/web` will be copied to each nest folders in this directory. Each folder is a separate website and have different git repository.  
+- `/apis`: OpenAPI/Swagger specs, JSON schema files, protocol definition files.  
+- `/applications/{app-name}`: The directory contains the source code of the application. Each application should be an instance of [Flask](http://flask.palletsprojects.com/en/stable/tutorial/layout/) and placed in a separate directory.  
+- `/build`: The directory contains the build scripts and configuration files.  
+- `/configs`: The directory contains the configuration files, environments, and settings for the project.
+- `/deployment`: The directory contains the deployment scripts and configuration files for various environments.
+- `/docs`: The directory contains the documentation of the project.  
+- `/internal`: The directory contains the shared libraries. In some cases, the shared libraries can be used by multiple applications.  
+- `/scripts`: The directory contains the scripts to perform various tasks.  
+- `/web`: The directory contains the web interface source code of the project. It can be known as the frontend of the project.  
+- `/websites`: The directory of public deployment website. Commonly, the built code from `/web` will be copied to each nest folders in this directory. Each folder is a separate website and have different git repository.  
 
 ### Start the development environment
 ```bash
