@@ -39,12 +39,13 @@ paths:
       operationId: listBookings
       security:
         - StaffSessionAuth: []
+        - FirebaseBearerAuth: []
       parameters:
-        - name: slug
+        - name: path
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/Slug'
+            $ref: '#/components/schemas/Path'
         - name: status
           in: query
           required: false
@@ -98,6 +99,7 @@ paths:
       operationId: createBooking
       security:
         - StaffSessionAuth: []
+        - FirebaseBearerAuth: []
       requestBody:
         required: true
         content:
@@ -137,6 +139,7 @@ paths:
       operationId: getBookingById
       security:
         - StaffSessionAuth: []
+        - FirebaseBearerAuth: []
       parameters:
         - $ref: '#/components/parameters/BookingIdParam'
       responses:
@@ -165,6 +168,7 @@ paths:
       operationId: updateBooking
       security:
         - StaffSessionAuth: []
+        - FirebaseBearerAuth: []
       parameters:
         - $ref: '#/components/parameters/BookingIdParam'
       requestBody:
@@ -212,6 +216,7 @@ paths:
       operationId: cancelBooking
       security:
         - StaffSessionAuth: []
+        - FirebaseBearerAuth: []
       parameters:
         - $ref: '#/components/parameters/BookingIdParam'
       responses:
@@ -240,6 +245,10 @@ components:
       type: apiKey
       in: cookie
       name: session_id
+    FirebaseBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 
   parameters:
     BookingIdParam:
@@ -251,7 +260,7 @@ components:
         format: uuid
 
   schemas:
-    Slug:
+    Path:
       type: string
       pattern: '^[a-z0-9-]{3,64}$'
       example: team-townhall
@@ -264,7 +273,7 @@ components:
       type: object
       required:
         - id
-        - slug
+        - path
         - target_url
         - starts_at_utc
         - ends_at_utc
@@ -276,8 +285,8 @@ components:
         id:
           type: string
           format: uuid
-        slug:
-          $ref: '#/components/schemas/Slug'
+        path:
+          $ref: '#/components/schemas/Path'
         target_url:
           type: string
           format: uri
@@ -301,14 +310,10 @@ components:
 
     CreateBookingRequest:
       type: object
-      required:
-        - slug
-        - target_url
-        - starts_at_utc
-        - ends_at_utc
+      required: [source_link_id, target_url, starts_at, ends_at]        
       properties:
-        slug:
-          $ref: '#/components/schemas/Slug'
+        path:
+          $ref: '#/components/schemas/Path'
         target_url:
           type: string
           format: uri
